@@ -145,6 +145,7 @@ module.exports = class Application {
       const serverError = createError.InternalServerError();
       const statusCode = error.status || serverError.status;
       const message = error.message || serverError.message;
+      console.log(message);
       return res.status(statusCode).json({
         statusCode,
         errors: {
