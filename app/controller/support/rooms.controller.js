@@ -1,4 +1,4 @@
-const { ConversationModel } = require("../../models/converstation");
+const { ConversationModel } = require("../../models/conversation");
 const { StatusCodes } = require("http-status-codes")
 const Controller = require("../controller");
 const path = require("path");
