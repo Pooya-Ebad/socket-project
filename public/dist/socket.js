@@ -42,6 +42,9 @@ function getRoomInfo(roomName){
     namespaceSocket.on("roomInfo", roomInfo => {
         document.querySelector("#roomName h3").innerText = roomInfo.description
     })
+    namespaceSocket.on("onlineUsersCount", count => {
+        document.getElementById("onlineCount").innerText = count
+    })
 }
 socket.on("connect", ()=> {
     socket.on("namespaceList", namespaces => {
