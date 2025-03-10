@@ -35,7 +35,7 @@ module.exports = class Application {
   }
   configApplication() {
     this.#app.use(cors())
-    this.#app.use(morgan("dev"));
+    // this.#app.use(morgan("dev"));
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..", "public")));

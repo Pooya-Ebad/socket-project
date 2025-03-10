@@ -9,8 +9,8 @@ function createPath(req){
     const day = date.getDate().toString()
     const directory = path.join(__dirname,"..", "..", "public", "uploads", "files", year, month, day)
     req.body.fileUploadPath = path.join("uploads", "files", year, month, day)
-    console.log(directory);
     fs.mkdirSync(directory ,{recursive : true})
+    
     return directory
 };
 const storage = multer.diskStorage({

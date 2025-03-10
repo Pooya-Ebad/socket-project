@@ -44,7 +44,7 @@
 
 /**
  * @swagger
- *  /support/namespace/add:
+ *  /namespace/add:
  *      post:
  *          tags: [Support]
  *          summary: add namespaces for chatroom
@@ -60,7 +60,7 @@
  */
 /**
  * @swagger
- *  /support/room/add:
+ *  /room/add:
  *      post:
  *          tags: [Support]
  *          summary: add room in namespaces for chatroom
