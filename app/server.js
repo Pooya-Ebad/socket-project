@@ -17,6 +17,7 @@ const fileUpload = require("express-fileupload");
 const { AllRoutes } = require("./routes/router");
 const { initialSocket } = require("./utils/initSocket");
 const { socketHandler } = require("./socket.io");
+const { clientHelper } = require("./utils/client");
 module.exports = class Application {
   #app = express();
   #DB_URI;
@@ -120,7 +121,8 @@ module.exports = class Application {
     this.#app.set("layout extractScripts", true);
     this.#app.set("layout", "./layouts/master");
     this.#app.use((req, res, next) => {
-    next()
+      this.#app.locals = clientHelper(req)
+      next()
     })
   }
   initClientSession(){
