@@ -1,3 +1,4 @@
+
 const socket = io("http://localhost:4000")
 let namespaceSocket;
 function stringToHtml(str){
@@ -9,7 +10,7 @@ function initNamespace(endpoint){
     namespaceSocket = io(`http://localhost:4000/${endpoint}`)
     namespaceSocket.on("connect", ()=>{
         namespaceSocket.on("roomList", rooms =>{
-            getRoomInfo(rooms[0].name)
+            getRoomInfo(endpoint, rooms[0].name)
             const roomElement = document.querySelector("#contacts ul")
             roomElement.innerHTML = ""
             for (const room of rooms) {
@@ -29,7 +30,7 @@ function initNamespace(endpoint){
             for (const room of roomNodes) {
                 room.addEventListener("click", ()=>{
                     const roomName = room.getAttribute("roomName")
-                    getRoomInfo(roomName)
+                    getRoomInfo(endpoint, roomName)
                 })   
             }
         })
@@ -37,7 +38,9 @@ function initNamespace(endpoint){
     })
 }
 
-function getRoomInfo(roomName){
+function getRoomInfo(endpoint, roomName){
+    document.querySelector("#roomName h3").setAttribute("roomName", roomName)
+    document.querySelector("#roomName h3").setAttribute("endpoint", endpoint)
     namespaceSocket.emit("joinRoom", roomName)
     namespaceSocket.on("roomInfo", roomInfo => {
         document.querySelector("#roomName h3").innerText = roomInfo.description
@@ -45,6 +48,32 @@ function getRoomInfo(roomName){
     namespaceSocket.on("onlineUsersCount", count => {
         document.getElementById("onlineCount").innerText = count
     })
+}
+function sendMessage(){
+    const roomName =  document.querySelector("#roomName h3").getAttribute("roomName")
+    const endpoint =  document.querySelector("#roomName h3").getAttribute("endpoint")
+    let message = document.querySelector(".message-input input#messageInput").value;
+    if(message.trim() == "")
+        return alert("message cannot be empty")
+    namespaceSocket.emit("newMessage", {
+        message,
+        roomName,
+        endpoint 
+    })
+    namespaceSocket.on("confirmation", data => {
+        console.log(data);
+    })
+    const li = stringToHtml(`
+         <li class="sent">
+                <img src="http://emilcarlsson.se/assets/harveyspecter.png"
+                    alt="" />
+                <p>${message}</p>
+            </li>
+        `)
+    document.querySelector(".messages ul").appendChild(li)
+    document.querySelector(".message-input input#messageInput").value = ""
+    const messageElement = document.querySelector("div.message")
+    messageElement.scrollTo(0, messageElement.scrollHeight)
 }
 socket.on("connect", ()=> {
     socket.on("namespaceList", namespaces => {
@@ -67,5 +96,13 @@ socket.on("connect", ()=> {
                 initNamespace(endpoint)
             })
         }
+    })
+    window.addEventListener("keydown", (e) => {
+        if(e.code == "Enter"){
+            sendMessage()
+        }
+    })
+    document.querySelector("button.submit").addEventListener("click", ()=>{
+        sendMessage()
     })
 })
