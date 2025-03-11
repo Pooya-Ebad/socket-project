@@ -26,7 +26,7 @@ class SupportController extends Controller {
             res.cookie("authorization", token, {signed: true, httpOnly: true, expires: new Date(Date.now() + 1000*60*60*1)})
             user.token = token;
             user.save();
-            return res.redirect("/support");
+            return res.redirect("/");
         } catch (error) {
             next(error)
         }
